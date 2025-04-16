@@ -23,9 +23,9 @@
             --warp-header-text-on-green: #000000; /* Zwart op groen */
             --warp-header-text-on-black: #e0e0e0;
             --warp-black-header-bg: #1a1a1a;
-            --bottom-header-height: 50px; /* Hoogte groene balk */
+            --bottom-header-height: 60px; /* Hoogte groene balk */
             --logo-overlap: 10px; /* Hoeveel logo uitsteekt */
-            --logo-height: calc(var(--bottom-header-height) + 2 * var(--logo-overlap)); /* Totale hoogte logo incl overlap */
+            --logo-height: calc(var(--bottom-header-height) + 2 * var(--logo-overlap)); /* 80px */
             --logo-width: 120px; /* Geschatte breedte logo - aanpassen indien nodig */
         }
 
@@ -45,17 +45,18 @@
              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .header-container {
-            max-width: 1920px;
+            max-width: 1200px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 2rem;
+            padding: 0 2rem; /* Padding links/rechts */
+            position: relative; /* Nodig voor absolute positionering van logo container */
         }
 
         /* Top Zwarte Balk */
         .top-header { background-color: var(--warp-black-header-bg); color: var(--warp-header-text-on-black); padding: 0.5rem 0; font-size: 0.8rem; }
-        .top-header .header-container { min-height: 50px; }
+        .top-header .header-container { min-height: 40px; }
         .top-header a { text-decoration: none; transition: color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease; }
         .top-header a:not(.icon-placeholder-link):not(.offerte-button-top):hover { color: #ffffff; }
         .showroom-link { color: var(--warp-green) !important; display: flex; align-items: center; }
@@ -74,76 +75,78 @@
         .bottom-header {
             background-color: var(--warp-green);
             color: var(--warp-header-text-on-green);
-            position: relative;
+            position: relative; /* Belangrijk voor absolute positionering logo */
             min-height: var(--bottom-header-height);
         }
          .bottom-header .header-container {
              min-height: var(--bottom-header-height);
-             justify-content: space-between;
-             align-items: center;
-             position: relative;
+             /* justify-content: space-between; wordt hieronder beheerd */
+             align-items: center; /* Verticaal centreren */
          }
 
-        /* Logo Afbeelding Container Styling */
+        /* Logo Afbeelding Container Styling (Absoluut gepositioneerd) */
         #image-logo-container {
-            width: var(--logo-width);
-            height: var(--logo-height); /* Hoger dan balk voor overlap */
-            position: relative;
-            flex-shrink: 0;
-            /* Zorgt dat container meedoet aan flex layout maar hoogte behoudt */
-            display: flex; /* Nodig om absolute kind te centreren */
-            align-items: center;
-            justify-content: flex-start; /* Lijn links uit */
-        }
-        /* Placeholder/Image styling */
-        #image-logo-placeholder {
-            position: absolute;
-            left: 200;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 400%; /* Neem breedte van container */
-            height: var(--logo-height); /* Stel hoogte in (hoger dan balk) */
-            display: flex; /* Gebruik flex om img te centreren */
+            position: absolute; /* Haal uit de flow */
+            left: 2rem; /* Zelfde als header padding */
+            top: 50%; /* Begin in het midden */
+            transform: translateY(-50%); /* Centreer verticaal */
+            width: var(--logo-width); /* Breedte instellen */
+            height: var(--logo-height); /* Hoogte instellen (met overlap) */
+            z-index: 10; /* Zorg dat het boven de balk ligt */
+            display: flex; /* Om img binnenin te centreren */
             align-items: center;
             justify-content: center;
-            /* Verwijder achtergrond/rand van placeholder */
-            /* background-color: #e0e0e0; */
-            /* border: 1px dashed var(--warp-medium-gray); */
-            font-size: 0.8rem;
-            color: var(--warp-medium-gray);
-            box-sizing: border-box;
-            z-index: 1;
+        }
+        /* Placeholder/Image styling binnen de container */
+        #image-logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* background-color: rgba(255,255,255,0.5); */ /* Optioneel: lichte bg voor debug */
+            /* border: 1px dashed black; */ /* Optioneel: rand voor debug */
         }
         #image-logo-placeholder img {
             display: block;
-            max-width: 200%;
-            max-height: 200%; /* Zorg dat afbeelding past */
-            height: auto; /* Behoud aspect ratio */
-            object-fit: contain; /* Zorg dat hele logo zichtbaar is */
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+            object-fit: contain;
         }
 
-
-        /* Navigatie Styling (gecentreerd) */
-        nav.centered-nav { flex-grow: 1; text-align: center; }
+        /* Navigatie Styling (gecentreerd, houdt rekening met logo) */
+        nav.centered-nav {
+             width: 100%; /* Neem volledige breedte van container */
+             text-align: center; /* Centreer de inline-block links */
+             padding-left: calc(var(--logo-width) + 1rem); /* Compenseer voor logo links, voeg wat extra ruimte toe */
+             padding-right: 1rem; /* Beetje ruimte rechts */
+             box-sizing: border-box;
+        }
          @media (max-width: 1024px) { nav.centered-nav { display: none; } }
+
         nav.centered-nav a { color: var(--warp-header-text-on-green); text-decoration: none; margin: 0 0.8rem; transition: opacity 0.2s ease-in-out; font-size: 0.9rem; display: inline-block; }
         nav.centered-nav a.main-link { font-weight: 600; }
         nav.centered-nav a.secondary-link { font-weight: 500; }
         nav.centered-nav a:hover { opacity: 0.7; }
 
-        /* Spacer aan de rechterkant voor centreren nav */
-        .nav-spacer-right { width: var(--logo-width); flex-shrink: 0; visibility: hidden; }
-         @media (max-width: 1024px) { .nav-spacer-right { display: none; } }
-
         /* Hamburger Menu Placeholder (rechts) */
-         .hamburger-menu { display: none; }
+         .hamburger-menu {
+             display: none;
+             position: absolute; /* Positioneer rechts */
+             right: 2rem; /* Zelfde als header padding */
+             top: 50%;
+             transform: translateY(-50%);
+          }
          @media (max-width: 1024px) {
-             .hamburger-menu { display: block; margin-left: 1rem; }
+             .hamburger-menu { display: block; }
+             /* Pas justify-content aan als nav weg is */
              .bottom-header .header-container { justify-content: space-between; }
          }
          .hamburger-menu button { color: var(--warp-header-text-on-green); font-size: 1.5rem; background: none; border: none; cursor: pointer; }
 
         /* --- Einde Header Styling --- */
+
 
         /* Hero Sectie Styling */
         #hero-section { display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: calc(80vh - 120px); padding: 2rem; text-align: center; background-color: #eef4e9; transition: opacity 0.5s ease-out, transform 0.5s ease-out; opacity: 1; transform: translateY(0); }
@@ -223,7 +226,7 @@
             <div class="header-container">
                 <div id="image-logo-container">
                     <div id="image-logo-placeholder">
-                       <img src="images/logo.png" alt="WARP Systems Logo" style="display: block; max-height: 100%; max-width: 100%; object-fit: contain;">
+                       <img src="images/logo.png" alt="WARP Systems Logo">
                        </div>
                 </div>
 
@@ -239,8 +242,6 @@
                     <a href="#" class="secondary-link">Over ons</a>
                     <a href="#" class="secondary-link">Werken bij WARP</a>
                 </nav>
-
-                 <div class="nav-spacer-right"></div>
 
                  <div class="hamburger-menu">
                      <button type="button">☰</button>
